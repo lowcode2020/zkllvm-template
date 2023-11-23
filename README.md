@@ -1,13 +1,12 @@
-
 [![Tutorial check](https://github.com/NilFoundation/zkllvm-template/actions/workflows/main.yml/badge.svg)](https://github.com/NilFoundation/zkllvm-template/actions/workflows/main.yml)
 
 # zkLLVM Tutorial and Template Project
 
-This repository serves as both a tutorial and a template project for creating an 
+This repository serves as both a tutorial and a template project for creating an
 application based on the [zkLLVM toolchain](https://github.com/nilfoundation/zkllvm).
 Use it to learn about developing zk-enabled apps with zkLLVM step-by-step.
 
-##  Prerequisites
+## Prerequisites
 
 For this tutorial, ensure you have an amd64 machine equipped with Docker or Podman (Linux) or Docker Desktop (macOS).
 For Windows users, Docker in WSL is recommended.
@@ -15,6 +14,7 @@ While Docker Desktop may work on Windows, it is not officially supported in this
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
 **Table of Contents**
 
 - [Introduction](#introduction)
@@ -39,10 +39,9 @@ While Docker Desktop may work on Windows, it is not officially supported in this
 
 # Introduction
 
-This tutorial is structured into sequential steps, 
+This tutorial is structured into sequential steps,
 each executed as a command within the `scripts/run.sh` script.
-For first-time users, we strongly recommend utilizing this script. 
-
+For first-time users, we strongly recommend utilizing this script.
 
 After completing the tutorial, you can revisit the steps by manually executing commands in the console.
 Detailed explanations of commands, parameters, file formats, and more can be found
@@ -106,7 +105,7 @@ scripts/run.sh --docker compile
 
 The `compile` command does the following:
 
-1. Starts a Docker container based on `nilfoundation/zkllvm-template`. 
+1. Starts a Docker container based on `nilfoundation/zkllvm-template`.
 2. Makes a clean `./build` directory and initializes `cmake`.
 3. Compiles the code into a circuit.
 
@@ -122,17 +121,18 @@ docker run --detach --rm \
     --user $(id -u ${USER}):$(id -g ${USER}) \
     ghcr.io/nilfoundation/zkllvm-template:0.0.58
 ```
+
 Note that it's a single command, wrapped on several lines.
 
 > The line `--volume $(pwd):/opt/zkllvm-template` mounts the project directory from  
-your host machine into the container, so that the source code is available in it.
-All the changes will persist on your machine,
-so you can stop this container at any time, start a new one, and continue.
+> your host machine into the container, so that the source code is available in it.
+> All the changes will persist on your machine,
+> so you can stop this container at any time, start a new one, and continue.
 
 > The line `--user $(id -u ${USER}):$(id -g ${USER})` runs container with a user having
-the same user and group ID as your own user on the host machine.
-With this option, newly created files in the `./build` directory will
-belong to your user, and not to the `root`.
+> the same user and group ID as your own user on the host machine.
+> With this option, newly created files in the `./build` directory will
+> belong to your user, and not to the `root`.
 
 Let's check that we have the zkLLVM compiler available in the container.
 Note that it replaces the original `clang`, being a fully compatible drop-in replacement:
@@ -155,8 +155,8 @@ make template
 ```
 
 > The extra parameter `DCIRCUIT_ASSEMBLY_OUTPUT=TRUE` is required to produce circuits
-in `.ll` format, which is supported by proving tools.
-zkLLVM can also produce circuits in another LLVM's IR format, `.bc`, but we won't need it in this tutorial.
+> in `.ll` format, which is supported by proving tools.
+> zkLLVM can also produce circuits in another LLVM's IR format, `.bc`, but we won't need it in this tutorial.
 
 </details>
 
@@ -175,9 +175,9 @@ On this step, we run the `assigner`, giving it the circuit in LLVM IR format (`t
 and the input data (`./src/main-input.json`).
 The `assigner` produces the following files:
 
-* Circuit file `./build/template.crct` is the circuit in a binary format that is
+- Circuit file `./build/template.crct` is the circuit in a binary format that is
   usable by the `proof-generator`.
-* Assignment table `./build/template.tbl` is a representation of input data,
+- Assignment table `./build/template.tbl` is a representation of input data,
   prepared for proof computation with this particular circuit.
 
 ## Step 3: Produce and verify a proof locally
@@ -200,11 +200,12 @@ proof-generator \
     --circuit_input=/opt/zkllvm-template/build/template.json \
     --public_input=/opt/zkllvm-template/src/main-input.json \
     --proof_out=/opt/zkllvm-template/build/template.proof
-    
+
 # --circuit_input: path to the circuit statement
 # --public_input: path to the file that contains particular input, that we want to make a proof for
 # --proof_out: path and name of the proof file
 ```
+
 </details>
 
 Note the following lines in the build log:
@@ -222,7 +223,7 @@ In the first lines, `proof-generator` creates a proof, and in the last one it ve
 The resulting proof is in the file `./build/template.proof`.
 
 Congratulations!
-You've produced a non-interactive zero-knowledge proof, or, formally speaking, 
+You've produced a non-interactive zero-knowledge proof, or, formally speaking,
 a zero-knowledge succinct non-interactive argument of knowledge
 ([zk-SNARK](https://en.wikipedia.org/wiki/Non-interactive_zero-knowledge_proof)).
 
@@ -254,12 +255,13 @@ python3 scripts/signup.py user \
 It should return something like this:
 
 ```json
-{"user":"zkdev","active":true,"extra":{},"error":false,"code":201}
+{ "user": "zkdev", "active": true, "extra": {}, "error": false, "code": 201 }
 ```
 
 This command will save your username and password in two files in the container:
-* `/proof-market-toolchain/scripts/.user`
-* `/proof-market-toolchain/scripts/.secret`
+
+- `/proof-market-toolchain/scripts/.user`
+- `/proof-market-toolchain/scripts/.secret`
 
 These files in the container are mounted to `.config/.user` and `.config/.secret` on your machine.
 This way, when you stop the container, the files will persist until you run it again.
@@ -305,8 +307,8 @@ docker run -it --rm \
 ```
 
 > The `.config` directory is where you will put the credentials to the Proof Market later on.
-Two extra volume mounts make this directory available in places where
-parts of the Proof Market toolchain might look for it.
+> Two extra volume mounts make this directory available in places where
+> parts of the Proof Market toolchain might look for it.
 
 Now pack the circuit into a statement:
 
@@ -319,7 +321,7 @@ python3 \
     --type placeholder-zkllvm \
     --private \
     --output /opt/zkllvm-template/build/template.json
-  
+
 # -c, --circuit: path to the circuit file
 # -n, --name: statement name
 # -o, --output: path to write the statement file
@@ -328,12 +330,12 @@ python3 \
 # (Placeholder is the name of our proof system, see
 # https://crypto3.nil.foundation/papers/placeholder.pdf)
 ```
+
 </details>
 
 As a result, we have the circuit statement file `./build/template.json`.
 Later we will use it to generate a proof locally.
 We will also push this circuit statement to the Proof Market.
-
 
 ## Step 6: Publish the circuit statement
 
@@ -346,6 +348,7 @@ python3 scripts/statement_tools.py push \
 ```
 
 This command will return the following output with your statement's ID (key):
+
 ```
 Statement from /opt/zkllvm-template/build/template.json was pushed with key 12345678.
 ```
@@ -362,7 +365,7 @@ python3 scripts/statement_tools.py get \
 You should see all the details of your statement in response.
 
 Congratulations! You've built a zkLLVM circuit and published it on the Proof Market.
-Now it's time to have a look at how developers of zero-knowledge applications 
+Now it's time to have a look at how developers of zero-knowledge applications
 use the Proof Market.
 
 # Part 2. Application developer workflow
@@ -444,7 +447,7 @@ Limit request:	 {
 When the proof is ready, download it:
 
 ```bash
-python3 scripts/proof_tools.py get \ 
+python3 scripts/proof_tools.py get \
     --request_key 99887766 \
     --file /tmp/example.proof
 
@@ -453,3 +456,39 @@ ls -l /tmp/example.proof
 
 Now the proof can be verified, both off-chain and on-chain.
 These steps will be added soon.
+
+# tldr;
+
+## как скомпилить серкет
+
+запустить последовательно
+
+scripts/run.sh --docker compile
+
+scripts/run.sh --docker run_assigner
+
+scripts/run.sh --docker prove
+
+scripts/run.sh --docker build_circuit_params
+
+## как проверить пруф ончейн
+
+в build/template будет создана кучка файлов, которые надо положить в https://github.com/NilFoundation/evm-placeholder-verification/tree/master/contracts/zkllvm
+в папку template
+
+и переименовать файл public-input.json в input.json
+
+имя папки важно
+
+далее по ридми evm-placeholder-verification сделать compile, node, deploy
+
+тест пруфа который получили:
+npx hardhat verify-circuit-proof --test template
+
+## как получить данные для инпутов хэшей в виде двух fields
+
+в ./src/main-input.json инпуты хэшей в виде полей
+
+скрипт для преобразования хэшей из хексов в поля
+
+см ./scripts/gen.py
