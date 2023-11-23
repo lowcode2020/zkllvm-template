@@ -143,16 +143,7 @@ build_circuit_params() {
         cd -
     else
         cd "$REPO_ROOT/build"
-        transpiler \
-          -m gen-gate-argument \
-          -i ../src/main-input.json \
-          -t template.tbl \
-          -c template.crct \
-          -o template \
-          --optimize-gates
-        check_file_exists "$REPO_ROOT/build/template/gate_argument.sol"
-        check_file_exists "$REPO_ROOT/build/template/linked_libs_list.json"
-        check_file_exists "$REPO_ROOT/build/template/public_input.json"
+        transpiler -m gen-evm-verifier -o template -c template.crct -t template.tbl
 
         transpiler \
           -m gen-circuit-params \
