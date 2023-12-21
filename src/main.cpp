@@ -53,7 +53,7 @@ constexpr std::size_t VALIDATORS_MAX_SIZE_LOG2 = 40;
 
 constexpr std::size_t VALIDATORS_TARGET_TREE_HEIGHT = VALIDATORS_MAX_SIZE_LOG2;
 
-constexpr std::size_t PROBLEM_SIZE_LOG2 = 6;
+constexpr std::size_t PROBLEM_SIZE_LOG2 = 21;
 constexpr std::size_t VALIDATORS_COUNT = 1 << PROBLEM_SIZE_LOG2;  // 2 ** PROBLEM_SIZE_LOG2
 constexpr std::size_t VALIDATORS_TREE_HEIGHT = PROBLEM_SIZE_LOG2; // 2 ** PROBLEM_SIZE_LOG2
 
